@@ -1,0 +1,12 @@
+# Temporary files
+/var/
+
+# Secrets
+/.env
+
+# Go
+__debug_bin
+debug.test
+
+# Project Specific
+*_git_excluded*
