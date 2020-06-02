@@ -2,9 +2,9 @@ package canbot
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/fuzzingbits/canbot/pkg/internal/slack"
+	"github.com/fuzzingbits/forge-wip/pkg/gol"
 )
 
 // App is the canbot app
@@ -17,13 +17,14 @@ type App struct {
 	StatePath            string `env:"STATE_FILE"`
 	slackAPI             slack.Service
 	state                *state
+	logger               gol.Logger
 }
 
 // Interval checks for new users and logs any errors
 func (app *App) Interval() {
 	err := app.checkUsers()
 	if err != nil {
-		log.Print(err)
+		app.logger.Error(err)
 	}
 }
 
@@ -33,7 +34,7 @@ func (app *App) checkUsers() error {
 		return err
 	}
 
-	log.Printf("Users Query Complete: %d found", len(users))
+	app.logger.Log("Users Query Complete: %d found", len(users))
 
 	for _, user := range users {
 		// Skip all bot users
@@ -59,7 +60,7 @@ func (app *App) checkUsers() error {
 		if !user.Deleted {
 			app.state.AddPendingAlert(user)
 			app.state.RemoveDeletedUser(user)
-			log.Printf("New Un-Deleted User Found: %s", user.ID)
+			app.logger.Log("New Un-Deleted User Found: %s", user.ID)
 
 			continue
 		}
@@ -70,7 +71,7 @@ func (app *App) checkUsers() error {
 
 			if app.state.FirstRunComplete {
 				app.state.AddPendingAlert(user)
-				log.Printf("New Deleted User Found: %s", user.ID)
+				app.logger.Log("New Deleted User Found: %s", user.ID)
 			}
 		}
 	}
@@ -88,7 +89,7 @@ func (app *App) checkUsers() error {
 func (app *App) sendAlert() error {
 	pendingAlerts := app.state.GetAllPendingAlerts()
 	if len(pendingAlerts) > 0 && app.state.FirstRunComplete {
-		log.Printf("About to alert on new Deleted User(s): %d", len(pendingAlerts))
+		app.logger.Log("About to alert on new Deleted User(s): %d", len(pendingAlerts))
 	}
 
 	for _, user := range pendingAlerts {
@@ -105,7 +106,7 @@ func (app *App) sendAlert() error {
 				return err
 			}
 
-			log.Printf("Alerted %s about user: %s", target, user.ID)
+			app.logger.Log("Alerted %s about user: %s", target, user.ID)
 
 			// Remove from pending alerts so we don't try to alert again
 			app.state.RemovePendingAlert(user)

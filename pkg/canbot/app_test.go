@@ -4,10 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"testing"
 
 	"github.com/fuzzingbits/canbot/pkg/internal/slack"
+	"github.com/fuzzingbits/forge-wip/pkg/gol"
 )
 
 type mockSlack struct {
@@ -21,6 +23,10 @@ func (m *mockSlack) UsersList() ([]slack.User, error) {
 
 func (m *mockSlack) ChatPostMessage(message slack.Message) (slack.Message, error) {
 	return m.ChatPostMessageResponse()
+}
+
+var golLogger = &gol.LogLogger{
+	Logger: log.New(os.Stderr, "", log.LstdFlags),
 }
 
 func TestMain(t *testing.T) {
@@ -55,7 +61,7 @@ func TestMain(t *testing.T) {
 		},
 	}
 
-	app, err := NewApp()
+	app, err := NewApp(golLogger)
 	if err != nil {
 		t.Error(err)
 	}
@@ -128,7 +134,7 @@ func TestMain(t *testing.T) {
 
 	slackUsers[1].Deleted = false
 
-	newApp, _ := NewApp()
+	newApp, _ := NewApp(golLogger)
 	newApp.slackAPI = slackAPI
 	{ // Eighth Run
 		postMessageError = nil
@@ -147,7 +153,7 @@ func TestBadStateFile(t *testing.T) {
 	os.Setenv("STATE_FILE", jsonFilePath)
 	ioutil.WriteFile(jsonFilePath, []byte("{true: true},"), 0644)
 
-	_, err := NewApp()
+	_, err := NewApp(golLogger)
 	if err == nil {
 		t.Errorf("There should have been an error")
 	}
@@ -160,7 +166,7 @@ func TestDefaults(t *testing.T) {
 	os.Setenv("SLACK_TOKEN", "fake-token")
 	os.Setenv("SLACK_TARGETS", "target1,target2")
 
-	app, err := NewApp()
+	app, err := NewApp(golLogger)
 	if err != nil {
 		t.Error("there should not have been an error")
 	}
@@ -184,7 +190,7 @@ func TestMainNoTokenError(t *testing.T) {
 
 	os.Setenv("SLACK_TARGETS", "target1,target2")
 
-	_, err := NewApp()
+	_, err := NewApp(golLogger)
 	if err == nil {
 		t.Error("there should have been an error")
 	}
@@ -196,7 +202,7 @@ func TestMainNoTargetsError(t *testing.T) {
 
 	os.Setenv("SLACK_TOKEN", "fake-token")
 
-	_, err := NewApp()
+	_, err := NewApp(golLogger)
 	if err == nil {
 		t.Error("there should have been an error")
 	}
@@ -208,7 +214,7 @@ func TestMainBlankTokenError(t *testing.T) {
 
 	os.Setenv("SLACK_TOKEN", "")
 
-	_, err := NewApp()
+	_, err := NewApp(golLogger)
 	if err == nil {
 		t.Error("there should have been an error")
 	}
@@ -221,7 +227,7 @@ func TestMainUsersError(t *testing.T) {
 	os.Setenv("SLACK_TOKEN", "fake-token")
 	os.Setenv("SLACK_TARGETS", "target1,target2")
 
-	app, err := NewApp()
+	app, err := NewApp(golLogger)
 	if err != nil {
 		t.Error(err)
 	}

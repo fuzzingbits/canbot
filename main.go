@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/fuzzingbits/canbot/pkg/canbot"
+	"github.com/fuzzingbits/forge-wip/pkg/gol"
+	"github.com/rollbar/rollbar-go"
 )
 
 var wg sync.WaitGroup
@@ -24,10 +26,14 @@ func main() {
 		os.Exit(0)
 	}()
 
+	// Get the primary logger
+	logger := getLogger()
+
 	// Create a new app
-	app, err := canbot.NewApp()
+	app, err := canbot.NewApp(logger)
 	if err != nil {
-		log.Fatal(err)
+		logger.Error(err)
+		os.Exit(1)
 	}
 
 	// First run of the app
@@ -44,4 +50,19 @@ func run(app *canbot.App) {
 	defer wg.Done()
 
 	app.Interval()
+}
+
+func getLogger() gol.Logger {
+	logger := log.New(os.Stderr, "", log.LstdFlags)
+
+	if rollbarToken := os.Getenv("ROLLBAR_TOKEN"); rollbarToken != "" {
+		return &gol.RollbarLogger{
+			Logger:  logger,
+			Rollbar: rollbar.New(rollbarToken, "prod", "", "", ""),
+		}
+	}
+
+	return &gol.LogLogger{
+		Logger: logger,
+	}
 }

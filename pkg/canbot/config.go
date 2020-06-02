@@ -6,10 +6,11 @@ import (
 
 	"github.com/fuzzingbits/canbot/pkg/internal/slack"
 	"github.com/fuzzingbits/forge-wip/pkg/config"
+	"github.com/fuzzingbits/forge-wip/pkg/gol"
 )
 
 // NewApp reads env vars and creates a new App incstance
-func NewApp() (*App, error) {
+func NewApp(logger gol.Logger) (*App, error) {
 	configInstance := config.Config{
 		Providers: []config.Provider{
 			config.ProviderEnvironment{},
@@ -17,6 +18,7 @@ func NewApp() (*App, error) {
 	}
 
 	app := &App{
+		logger: logger,
 		// Define defaults
 		SlackUsername:  "CanBot",
 		SlackIconEmoji: ":flushed",
