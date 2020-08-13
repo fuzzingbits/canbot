@@ -1,6 +1,6 @@
 module github.com/fuzzingbits/canbot
 
-go 1.14
+go 1.15
 
 require (
 	github.com/fuzzingbits/forge-wip v0.0.2
