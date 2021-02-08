@@ -1,13 +1,13 @@
 # CanBot
 
-[![License](https://img.shields.io/github/license/fuzzingbits/canbot)](https://github.com/fuzzingbits/canbot/blob/main/LICENSE)
-[![Documentation](https://godoc.org/github.com/fuzzingbits/canbot?status.svg)](http://godoc.org/github.com/fuzzingbits/canbot)
-[![Docker Image](https://img.shields.io/badge/container-Docker-blue)](https://hub.docker.com/r/fuzzingbits/canbot)
-[![Go Report Card](https://goreportcard.com/badge/github.com/fuzzingbits/canbot)](https://goreportcard.com/report/github.com/fuzzingbits/canbot)
-[![Go](https://github.com/fuzzingbits/canbot/workflows/Go/badge.svg)](https://github.com/fuzzingbits/canbot/actions)
-[![Coverage Status](https://coveralls.io/repos/github/fuzzingbits/canbot/badge.svg?branch=main)](https://coveralls.io/github/fuzzingbits/canbot?branch=main)
-
 A tool that watches and send alerts when users are deleted from your instance of Slack. This can be helpful in large (or any sized) organizations to know when users are no longer employed.
+
+[![GitHub Actions](https://github.com/fuzzingbits/canbot/workflows/Go/badge.svg)](https://github.com/fuzzingbits/canbot/actions)
+[![Coverage Status](https://coveralls.io/repos/github/fuzzingbits/canbot/badge.svg?branch=main)](https://coveralls.io/github/fuzzingbits/canbot?branch=main)
+[![Go Report Card](https://goreportcard.com/badge/github.com/fuzzingbits/canbot)](https://goreportcard.com/report/github.com/fuzzingbits/canbot)
+[![License](https://img.shields.io/github/license/fuzzingbits/canbot)](https://github.com/fuzzingbits/canbot/blob/main/LICENSE)
+[![Docker Image](https://img.shields.io/badge/container-Docker-blue)](https://hub.docker.com/r/fuzzingbits/canbot)
+
 
 ## Config Options
 | Environment Variable | Default | Required | Description |
