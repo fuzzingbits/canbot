@@ -1,12 +1,16 @@
-# Temporary files
+# System Files
+/.vscode/
+/.idea/
+.DS_Store
+
+# Temporary Files
 /var/
 
-# Secrets
+# Disted Files
 /.env
 
-# Go
+# Go Files
 __debug_bin
-debug.test
 
-# Project Specific
+# Project Specific Files
 *_git_excluded*

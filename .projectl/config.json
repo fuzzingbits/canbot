@@ -1,0 +1,6 @@
+{
+    "docker_name": "fuzzingbits/canbot",
+    "gitignore": [
+        "*_git_excluded*"
+    ]
+}
