@@ -1,12 +1,11 @@
-FROM golang:1.15-buster as goBuilder
-WORKDIR /project
+FROM golang:1.16-buster as goBuilder
+WORKDIR /build-staging
 COPY . .
-RUN rm -rf .env
-RUN make
+RUN make clean lint test build
 
 FROM debian:buster
-WORKDIR /project
-COPY --from=goBuilder /project/var/canbot /usr/local/bin/
 RUN apt-get update
 RUN apt-get install -y ca-certificates
-CMD ["canbot"]
+WORKDIR /app
+COPY --from=goBuilder /build-staging/var/canbot ./canbot
+CMD ["./canbot"]
