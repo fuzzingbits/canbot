@@ -1,7 +1,8 @@
 FROM golang:1.16-buster as goBuilder
 WORKDIR /build-staging
 COPY . .
-RUN make clean lint test build
+RUN make clean-full
+RUN make lint-go test-go build-go
 
 FROM debian:buster
 RUN apt-get update
