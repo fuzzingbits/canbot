@@ -18,6 +18,7 @@ docker:
 build: build-go ## Build the application
 
 build-go:
+	@go generate
 	go build -ldflags='-s -w' -o $(CURDIR)/var/canbot .
 	@ln -sf $(CURDIR)/var/canbot $(GO_PATH)/bin/canbot
 
