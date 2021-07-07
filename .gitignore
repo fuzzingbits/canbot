@@ -9,6 +9,10 @@
 # Disted Files
 /.env
 
+# Environment Files
+/.env.local
+/.env.*.local
+
 # Go Files
 __debug_bin
 debug.test
